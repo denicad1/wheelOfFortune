@@ -118,7 +118,7 @@ public class player extends Setup {
 		 * choice matches anything in the array then it will change the boolean to true
 		 * which will stop the game from saying that a vowel wasn't chosen
 		 */
-
+		// PUT A TRY CATCH BLOCK IN THIS METHOD!!!!!!!!!!!!!!!
 		String vowelChoose = key.next();
 		char temp = vowelChoose.toUpperCase().charAt(0);
 		String vowelCharAt = Character.toString(temp);
@@ -155,6 +155,7 @@ public class player extends Setup {
 		 * verify the vowel input. figure out later the consonants method. inplement
 		 * that in the wheelOfFortune main method
 		 */
+		// PUT A TRY CATCH BLOCK IN THIS METHOD!!!!!!!!!!!!!!!!!!
 		String consonantChoose = key.next();
 		for (int i = 0; i < consonants.length; i++) {
 			if (consonantChoose.toUpperCase().equals(consonants[i])) {
@@ -176,7 +177,7 @@ public class player extends Setup {
 
 	}
 
-	public void solve() {
+	public String solve() {
 		System.out.println("spell the sentence ");
 		String finish = key.next().toUpperCase();
 		ArrayList<String> finishTemp = new ArrayList<>();
@@ -187,14 +188,15 @@ public class player extends Setup {
 			for (int j = 0; j < billboard.size(); j++) {
 				if (finishTemp.get(j).equals(billboard.get(j))) {
 					System.out.println("congrats");
-					break;
+					return null;
 
 				} else {
 					System.out.println("no that is not the correct answer");
-					game.turn();
+					return null;
 
 				}
 			}
 		}
+		return null;
 	}
 }

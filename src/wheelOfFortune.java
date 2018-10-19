@@ -30,7 +30,7 @@ public class wheelOfFortune extends Setup {
 
 		board(topic());
 
-		choices(2);
+		turn();
 
 	}
 
@@ -50,34 +50,65 @@ public class wheelOfFortune extends Setup {
 	 * the choices method allows you to choose between picking a vowel, consonant or
 	 * attempting to solve the puzzle
 	 */
-	public static void choices(int i) {
+	public static String choices(int i) {
 		/*
 		 * this for loop is for choosing which player is getting to choose what they
 		 * want to do
 		 */
 
-		System.out.println("what would you like to do? Press 1 to buy a vowel, " + "press 2 to get a consonant "
-				+ "press 3 to solve the puzzle ");
+		System.out.println("what would you like to do " + listOfPlayers.get(i).getName() + "? Press 1 to buy a vowel, "
+				+ "press 2 to get a consonant " + "press 3 to solve the puzzle ");
 		int caseNumber = key.nextInt();
-		System.out.println(spin());
+
 		switch (caseNumber) {
 		case 1: {
-			listOfPlayers.get(i).chooseVowel();
-			break;
+			return listOfPlayers.get(i).chooseVowel();
+
 		}
 		case 2: {
-			listOfPlayers.get(i).chooseConsonant();
-			break;
+			return listOfPlayers.get(i).chooseConsonant();
+
 		}
 		case 3: {
-			listOfPlayers.get(i).solve();
-			break;
+			return listOfPlayers.get(i).solve();
+
 		}
 		}
+		return null;
 
 	}
 
 	public static void turn() {
+		ArrayList<String> temp2 = temp;
+
+		do {
+			spin();
+			for (int j = 0; j < listOfPlayers.size(); j++) {
+
+				System.out.println(spin());
+				boardchanger(choices(j));
+
+				if (j == 2) {
+					j = 0;
+				}
+			}
+
+		} while (temp2 != temp
+
+		);
+	}
+
+	public static void boardchanger(String x) {
+
+		for (int i = 0; i < temp.size(); i++) {
+			if (billboard.get(i).equals(x)) {
+
+				word.replace(i, i, x);
+
+			}
+
+		}
+		System.out.println(word);
 
 	}
 }

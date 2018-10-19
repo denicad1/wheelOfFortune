@@ -6,6 +6,7 @@ public class Setup {
 	final static Scanner key = new Scanner(System.in);// don't forget to close scanner
 	static ArrayList<String> billboard;
 	static ArrayList<String> temp;
+	static StringBuilder word;
 
 	public static String topic() {
 		int decider = new Random().nextInt(3);
@@ -51,7 +52,7 @@ public class Setup {
 	public static void board(String topic) {
 		billboard = new ArrayList<>(topic.length());
 		temp = new ArrayList<>(topic.length());
-		StringBuilder word = new StringBuilder();
+		word = new StringBuilder();
 		for (int i = 0; i < topic.length(); i++) {
 			char t = topic.charAt(i);
 			String insert = Character.toString(t);
