@@ -8,7 +8,10 @@ import java.util.ArrayList;
  *
  */
 public class wheelOfFortune extends Setup {
-
+	/*
+	 * this counter is only for saying which player is getting named
+	 */
+	static int counter = 1;
 	static int rounds = 3;
 	/* array of players */
 	public static ArrayList<player> listOfPlayers = new ArrayList<>();
@@ -27,7 +30,7 @@ public class wheelOfFortune extends Setup {
 
 		board(topic());
 
-		choices();
+		choices(2);
 
 	}
 
@@ -35,12 +38,10 @@ public class wheelOfFortune extends Setup {
 	 * the name method allows you to name each player
 	 */
 	public static String Name() {
-		/*
-		 * this counter is only for saying which player is getting named
-		 */int counter = 1;
+
 		System.out.println("input player" + counter + " name");
-		counter++;
 		String name = key.nextLine();
+		counter++;
 		return name;
 
 	}
@@ -49,32 +50,31 @@ public class wheelOfFortune extends Setup {
 	 * the choices method allows you to choose between picking a vowel, consonant or
 	 * attempting to solve the puzzle
 	 */
-	public static void choices() {
+	public static void choices(int i) {
 		/*
 		 * this for loop is for choosing which player is getting to choose what they
 		 * want to do
 		 */
-		for (int i = 0; i < listOfPlayers.size(); i++) {
-			System.out.println("what would you like to do? Press 1 to buy a vowel, " + "press 2 to get a consonant "
-					+ "press 3 to solve the puzzle ");
-			int caseNumber = key.nextInt();
-			System.out.println(spin());
-			switch (caseNumber) {
-			case 1: {
-				listOfPlayers.get(i).chooseVowel();
-				break;
-			}
-			case 2: {
-				listOfPlayers.get(i).chooseConsonant();
-				break;
-			}
-			case 3: {
-				listOfPlayers.get(i).solve();
-				break;
-			}
-			}
 
+		System.out.println("what would you like to do? Press 1 to buy a vowel, " + "press 2 to get a consonant "
+				+ "press 3 to solve the puzzle ");
+		int caseNumber = key.nextInt();
+		System.out.println(spin());
+		switch (caseNumber) {
+		case 1: {
+			listOfPlayers.get(i).chooseVowel();
+			break;
 		}
+		case 2: {
+			listOfPlayers.get(i).chooseConsonant();
+			break;
+		}
+		case 3: {
+			listOfPlayers.get(i).solve();
+			break;
+		}
+		}
+
 	}
 
 	public static void turn() {

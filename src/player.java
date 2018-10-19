@@ -120,8 +120,11 @@ public class player extends Setup {
 		 */
 
 		String vowelChoose = key.next();
+		char temp = vowelChoose.toUpperCase().charAt(0);
+		String vowelCharAt = Character.toString(temp);
+
 		for (int i = 0; i < vowels.length; i++) {
-			if (vowelChoose.toUpperCase().equals(vowels[i]) || vowelChoose.toUpperCase().charAt(0) == vowels[i]) {
+			if (vowelChoose.toUpperCase().equals(vowels[i]) || vowelCharAt.equals(vowels[i])) {
 				go = true;
 				return vowels[i];
 
@@ -134,8 +137,10 @@ public class player extends Setup {
 		 */
 		if (!go) {
 			System.out.println("not a vowel");
+
 		}
-		game.turn();
+		// this stays outside of second if statement
+
 		return null;
 
 	}
@@ -160,7 +165,7 @@ public class player extends Setup {
 		if (!go) {
 			System.out.println("not a consonant");
 		}
-		game.turn();
+
 		return null;
 
 		/*
