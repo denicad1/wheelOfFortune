@@ -3,10 +3,11 @@ import java.io.*;
 
 public class Setup {
 	final static ArrayList<Integer> wheel = new ArrayList<>();
-	final static Scanner key = new Scanner(System.in);// don't forget to close scanner
 	static ArrayList<String> billboard;
 	static ArrayList<String> temp;
 	static StringBuilder word;
+
+	public static ArrayList<player> listOfPlayers = new ArrayList<>();
 
 	public static String topic() {
 		int decider = new Random().nextInt(3);
@@ -58,7 +59,6 @@ public class Setup {
 			String insert = Character.toString(t);
 			billboard.add(insert);
 		}
-		System.out.println(billboard.toString());
 
 		for (int i = 0; i < topic.length(); i++) {
 			if (billboard.get(i).equals(" ")) {
@@ -73,8 +73,8 @@ public class Setup {
 			String letter = temp.get(i);
 			word.append(letter);
 		}
-		System.out.println(temp.toString());
-		System.out.println(word);
+		System.out.println(billboard.toString() + "this is being printed from the setup class");
+		System.out.println(word + "same thing as above");
 
 	}
 

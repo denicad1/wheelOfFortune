@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 /**
  * 
@@ -8,16 +10,17 @@ import java.util.ArrayList;
  *
  */
 public class wheelOfFortune extends Setup {
+	final static Scanner key = new Scanner(System.in);// don't forget to close scanner
+	static int playerturn = 0;
 	/*
 	 * this counter is only for saying which player is getting named
 	 */
 	static int counter = 1;
 	static int rounds = 3;
 	/* array of players */
-	public static ArrayList<player> listOfPlayers = new ArrayList<>();
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+
 		System.out.println("Welcome to Wheel of Fortune");
 		/* these are the players */
 		player player1 = new player(100, 0, Name());
@@ -27,10 +30,15 @@ public class wheelOfFortune extends Setup {
 		listOfPlayers.add(player1);
 		listOfPlayers.add(player2);
 		listOfPlayers.add(player3);
-
 		board(topic());
+		String durp = choices(key);
+		for (int i = 0; i < rounds; i++) {
 
-		turn();
+			listOfPlayers.get(playerturn).boardchanger(durp);
+			playerturn++;
+		}
+
+		key.close();
 
 	}
 
@@ -50,65 +58,49 @@ public class wheelOfFortune extends Setup {
 	 * the choices method allows you to choose between picking a vowel, consonant or
 	 * attempting to solve the puzzle
 	 */
-	public static String choices(int i) {
+	public static String choices(Scanner number) {
 		/*
 		 * this for loop is for choosing which player is getting to choose what they
 		 * want to do
 		 */
+		try {
+			System.out.println("what would you like to do " + listOfPlayers.get(playerturn).getName()
+					+ "? Press 1 to buy a vowel, " + "press 2 to get a consonant " + "press 3 to solve the puzzle ");
+			int caseNumber = number.nextInt();
 
-		System.out.println("what would you like to do " + listOfPlayers.get(i).getName() + "? Press 1 to buy a vowel, "
-				+ "press 2 to get a consonant " + "press 3 to solve the puzzle ");
-		int caseNumber = key.nextInt();
+			switch (caseNumber) {
+			case 1: {
+				return listOfPlayers.get(playerturn).chooseVowel(key);
 
-		switch (caseNumber) {
-		case 1: {
-			return listOfPlayers.get(i).chooseVowel();
+			}
+			case 2: {
+				return listOfPlayers.get(playerturn).chooseConsonant(key);
 
-		}
-		case 2: {
-			return listOfPlayers.get(i).chooseConsonant();
+			}
+			case 3: {
+				return listOfPlayers.get(playerturn).solve(key);
 
-		}
-		case 3: {
-			return listOfPlayers.get(i).solve();
+			}
+			}
 
-		}
+		} catch (Exception e) {
+			number.next();
+			// TODO: handle exception
 		}
 		return null;
 
 	}
 
-	public static void turn() {
-		ArrayList<String> temp2 = temp;
+	/*
+	 * method to take input from return value from choices and check to make sure
+	 * that it produces something of value
+	 */
+	public static void turn(String fill) {
 
-		do {
-			spin();
-			for (int j = 0; j < listOfPlayers.size(); j++) {
-
-				System.out.println(spin());
-				boardchanger(choices(j));
-
-				if (j == 2) {
-					j = 0;
-				}
-			}
-
-		} while (temp2 != temp
-
-		);
-	}
-
-	public static void boardchanger(String x) {
-
-		for (int i = 0; i < temp.size(); i++) {
-			if (billboard.get(i).equals(x)) {
-
-				word.replace(i, i, x);
-
-			}
-
+		System.out.println(playerturn);
+		if (playerturn > 2) {
+			playerturn = 0;
 		}
-		System.out.println(word);
-
 	}
+
 }

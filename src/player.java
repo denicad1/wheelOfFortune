@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
@@ -97,77 +98,89 @@ public class player extends Setup {
 		return x.grandTotalBank;
 	}// method to add the bank of the current round to the grand bank of the winner
 
-	public int decreaseGrandBank(player x) {
-		x.grandTotalBank -= x.bank;
-		return x.grandTotalBank;
-	}// does wheel of fortune decrease the grand bank?
-	/* method to choose and check the vowel */
+	/* this method is to verify that the player chooses a vowel */
+	public String chooseVowel(Scanner vowel) {
+		String correct = "nope";
+		try {
+			boolean go = false;
+			/*
+			 * this boolean is so the else statement doesn't run everytime for the size of
+			 * the vowels array. the vowels array is so the input can be compared to
+			 * something
+			 */
+			String[] vowels = { "A", "E", "I", "O", "U" };
+			System.out.println(spin());
+			System.out.println("choose a vowel");
 
-	public String chooseVowel() {
-		boolean go = false;
-		/*
-		 * this boolean is so the else statement doesn't run everytime for the size of
-		 * the vowels array. the vowels array is so the input can be compared to
-		 * something
-		 */
-		String[] vowels = { "A", "E", "I", "O", "U" };
-		System.out.println("choose a vowel");
-		/*
-		 * vowelChoose is the player input for choosing a vowel. it will be changed to
-		 * upper case so that it will be comparable to the vowels array. if the player's
-		 * choice matches anything in the array then it will change the boolean to true
-		 * which will stop the game from saying that a vowel wasn't chosen
-		 */
-		// PUT A TRY CATCH BLOCK IN THIS METHOD!!!!!!!!!!!!!!!
-		String vowelChoose = key.next();
-		char temp = vowelChoose.toUpperCase().charAt(0);
-		String vowelCharAt = Character.toString(temp);
+			/*
+			 * vowelChoose is the player input for choosing a vowel. it will be changed to
+			 * upper case so that it will be comparable to the vowels array. if the player's
+			 * choice matches anything in the array then it will change the boolean to true
+			 * which will stop the game from saying that a vowel wasn't chosen
+			 */
+			// PUT A TRY CATCH BLOCK IN THIS METHOD!!!!!!!!!!!!!!!
+			String vowelChoose = vowel.next();
+			char temp = vowelChoose.toUpperCase().charAt(0);
+			String vowelCharAt = Character.toString(temp);
 
-		for (int i = 0; i < vowels.length; i++) {
-			if (vowelChoose.toUpperCase().equals(vowels[i]) || vowelCharAt.equals(vowels[i])) {
-				go = true;
-				return vowels[i];
+			for (int i = 0; i < vowels.length; i++) {
+				if (vowelChoose.toUpperCase().equals(vowels[i]) || vowelCharAt.equals(vowels[i])) {
+					go = true;
+					correct = vowels[i];
+
+				}
+
+			}
+			/*
+			 * if no vowel is chosen, boolean stays false and will say that a vowel wasn't
+			 * chosen
+			 */
+			if (!go) {
+				System.out.println("not a vowel");
 
 			}
 
-		}
-		/*
-		 * if no vowel is chosen, boolean stays false and will say that a vowel wasn't
-		 * chosen
-		 */
-		if (!go) {
-			System.out.println("not a vowel");
+		} catch (NullPointerException e) {
 
+			// TODO: handle exception
+			System.out.println("not a vowel. try again");
 		}
-		// this stays outside of second if statement
 
-		return null;
+		return correct;
 
 	}
 
-	public String chooseConsonant() {
+	/* this method is meant to make sure that the user chooses a consonant */
+	public String chooseConsonant(Scanner consonant) {
 		boolean go = false;
-		String[] consonants = { "B", "C", "D", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V",
-				"W", "X", "Y", "Z" };
-		System.out.println("choose a consonant");
-		/*
-		 * fill chooseVowel with an actual Vowel. not just an input. this method should
-		 * verify the vowel input. figure out later the consonants method. inplement
-		 * that in the wheelOfFortune main method
-		 */
-		// PUT A TRY CATCH BLOCK IN THIS METHOD!!!!!!!!!!!!!!!!!!
-		String consonantChoose = key.next();
-		for (int i = 0; i < consonants.length; i++) {
-			if (consonantChoose.toUpperCase().equals(consonants[i])) {
-				go = true;
-				return consonants[i];
+		String correct = "nope";
+		try {
+
+			String[] consonants = { "B", "C", "D", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V",
+					"W", "X", "Y", "Z" };
+			System.out.println(spin());
+			System.out.println("choose a consonant");
+
+			String consonantChoose = consonant.next();
+
+			for (int i = 0; i < consonants.length; i++) {
+				if (consonantChoose.toUpperCase().equals(consonants[i])) {
+					go = true;
+					correct = consonants[i];
+				}
+
 			}
-		}
-		if (!go) {
-			System.out.println("not a consonant");
+			if (!go) {
+				System.out.println("nope");
+
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			consonant.nextLine();
 		}
 
-		return null;
+		return correct;
 
 		/*
 		 * fix choose consonant. also fix chooseVowel. choose vowel must return a
@@ -177,26 +190,44 @@ public class player extends Setup {
 
 	}
 
-	public String solve() {
-		System.out.println("spell the sentence ");
-		String finish = key.next().toUpperCase();
-		ArrayList<String> finishTemp = new ArrayList<>();
-		for (int i = 0; i < finish.length(); i++) {
-			char t = finish.charAt(i);
-			String insert = Character.toString(t);
-			finishTemp.add(insert);
+	/* this method is to verify that the phrase is solved */
+	public String solve(Scanner phrase) {
+		String finished = "nope";
+		boolean go = false;
+		try {
+
+			System.out.println(spin());
+			System.out.println("spell the sentence ");
+			String finish = phrase.nextLine().toUpperCase();
+
 			for (int j = 0; j < billboard.size(); j++) {
-				if (finishTemp.get(j).equals(billboard.get(j))) {
-					System.out.println("congrats");
-					return null;
+				if (finish.equalsIgnoreCase(billboard.toString())) {
+					go = true;
+					finished = "thats it";
 
-				} else {
-					System.out.println("no that is not the correct answer");
-					return null;
+				} // if
+			} // for
+			System.out.println(finish);
+		} catch (Exception e) {
+			// TODO: handle exception
+			// phrase.nextLine();
+		} // catch
+		System.out.println(finished);
 
-				}
+		return finished;
+	}/* might move this back to wheelOfFortune but idk just yet */
+
+	public void boardchanger(String x) {
+
+		for (int i = 0; i < billboard.size(); i++) {
+			if (billboard.get(i).equals(x)) {
+				word.replace(i, i + 1, x);
 			}
+
 		}
-		return null;
+		System.out.println(billboard.toString());
+		System.out.println(word);
+
 	}
+
 }
