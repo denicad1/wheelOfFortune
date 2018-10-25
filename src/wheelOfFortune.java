@@ -30,12 +30,29 @@ public class wheelOfFortune extends Setup {
 		listOfPlayers.add(player1);
 		listOfPlayers.add(player2);
 		listOfPlayers.add(player3);
+		wheel();
 		board(topic());
-		String durp = choices(key);
-		for (int i = 0; i < rounds; i++) {
 
-			listOfPlayers.get(playerturn).boardchanger(durp);
-			playerturn++;
+		/*
+		 * figure out how to make it run correctly. the solve method isnt working
+		 * properly. I believe that the chooseVowel and ChooseConsonant work properly.
+		 * just gotta put those parts together first
+		 */
+		/* still have to add a multiplier for when multiple letters are correct */
+		/* still have to add a banking system */
+		/*
+		 * make sure that when choosing a vowel, it deducts a 100 points and that if
+		 * they dont have enough that it will tell them
+		 */
+		/* figure out a free spin system */
+		for (int i = 0; i < rounds; i++) {
+			String durp = choices(key);
+			do {
+				boardchanger(durp);
+				turn();
+				break;
+
+			} while (isSolved(billboard, word) == false);
 		}
 
 		key.close();
@@ -59,10 +76,6 @@ public class wheelOfFortune extends Setup {
 	 * attempting to solve the puzzle
 	 */
 	public static String choices(Scanner number) {
-		/*
-		 * this for loop is for choosing which player is getting to choose what they
-		 * want to do
-		 */
 		try {
 			System.out.println("what would you like to do " + listOfPlayers.get(playerturn).getName()
 					+ "? Press 1 to buy a vowel, " + "press 2 to get a consonant " + "press 3 to solve the puzzle ");
@@ -91,16 +104,60 @@ public class wheelOfFortune extends Setup {
 
 	}
 
-	/*
-	 * method to take input from return value from choices and check to make sure
-	 * that it produces something of value
-	 */
-	public static void turn(String fill) {
+	public static void boardchanger(String x) {
 
-		System.out.println(playerturn);
+		for (int i = 0; i < billboard.size(); i++) {
+			if (billboard.get(i).equals(x)) {
+				word.replace(i, i + 1, x);
+			}
+
+		}
+		System.out.println(billboard.toString());
+		System.out.println(word);
+
+	}/*
+		 * should the turn method make sure that the player input actually did something
+		 * to progress the game?
+		 */
+	/*
+	 * keep working on turn. if keeps jumping 1. it is adding a bunch of numbers no
+	 * matter if i get it right or not
+	 */
+	/*
+	 * it is counting sequentially. it can't tell if the current player got it right
+	 * or not. need to make it check if something in the word has changed and
+	 * compare it to an old version of itself so it knows whether or not to switch
+	 * to the next player
+	 */
+
+	public static void turn() {
+		for (int i = 0; i < billboard.size(); i++) {
+			if (word.toString().contains(billboard.get(i))) {
+				System.out.println("correct");
+
+			} else {
+				playerturn++;
+				break;
+			}
+		}
+
+		/*
+		 * this might run after the boardchanger method and anything else to make it so
+		 * it picks another player by adjusting the playerturn number.
+		 */
+
 		if (playerturn > 2) {
 			playerturn = 0;
 		}
+		System.out.println(playerturn + " this is the playerturn counter");
+	}
+
+	public static boolean isSolved(ArrayList<String> correctString, StringBuilder s2) {
+		boolean correct = false;
+		if (correctString.toString().equals(s2.toString())) {
+			correct = true;
+		}
+		return correct;
 	}
 
 }

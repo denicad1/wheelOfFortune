@@ -79,7 +79,7 @@ public class Setup {
 	}
 
 	public static int spin() {
-		wheel();
+
 		int wheelTick = new Random().nextInt(24);
 		int spin = wheelTick;
 		int fin = 0;
@@ -100,4 +100,5 @@ public class Setup {
 		return fin;
 
 	}
+
 }

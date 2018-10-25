@@ -210,24 +210,11 @@ public class player extends Setup {
 			System.out.println(finish);
 		} catch (Exception e) {
 			// TODO: handle exception
-			// phrase.nextLine();
+			phrase.next();
 		} // catch
 		System.out.println(finished);
 
 		return finished;
-	}/* might move this back to wheelOfFortune but idk just yet */
-
-	public void boardchanger(String x) {
-
-		for (int i = 0; i < billboard.size(); i++) {
-			if (billboard.get(i).equals(x)) {
-				word.replace(i, i + 1, x);
-			}
-
-		}
-		System.out.println(billboard.toString());
-		System.out.println(word);
-
 	}
 
 }
