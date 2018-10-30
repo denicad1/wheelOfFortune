@@ -11,16 +11,39 @@ import java.util.Scanner;
  */
 public class wheelOfFortune extends Setup {
 	final static Scanner key = new Scanner(System.in);// don't forget to close scanner
-	static int playerturn = 0;
+
 	/*
 	 * this counter is only for saying which player is getting named
 	 */
-	static int counter = 1;
+
 	static int rounds = 3;
 	/* array of players */
 
 	public static void main(String[] args) {
-
+		wheel.add(-1);// lose a turn
+		wheel.add(800);
+		wheel.add(350);
+		wheel.add(450);
+		wheel.add(700);
+		wheel.add(300);
+		wheel.add(600);
+		wheel.add(5000);
+		wheel.add(300);
+		wheel.add(600);
+		wheel.add(300);
+		wheel.add(500);
+		wheel.add(800);
+		wheel.add(550);
+		wheel.add(400);
+		wheel.add(300);
+		wheel.add(900);
+		wheel.add(500);
+		wheel.add(2);// wildcard
+		wheel.add(900);
+		wheel.add(0);// bankrupt
+		wheel.add(600);
+		wheel.add(400);
+		wheel.add(300);
 		System.out.println("Welcome to Wheel of Fortune");
 		/* these are the players */
 		player player1 = new player(100, 0, Name());
@@ -30,7 +53,7 @@ public class wheelOfFortune extends Setup {
 		listOfPlayers.add(player1);
 		listOfPlayers.add(player2);
 		listOfPlayers.add(player3);
-		wheel();
+
 		board(topic());
 
 		/*
@@ -45,12 +68,10 @@ public class wheelOfFortune extends Setup {
 		 * they dont have enough that it will tell them
 		 */
 		/* figure out a free spin system */
-		for (int i = 0; i < rounds; i++) {
-			String durp = choices(key);
+		for (int i = 0; i < 10; i++) {
+
 			do {
-				boardchanger(durp);
-				turn();
-				break;
+				choices(key);
 
 			} while (isSolved(billboard, word) == false);
 		}
@@ -75,45 +96,63 @@ public class wheelOfFortune extends Setup {
 	 * the choices method allows you to choose between picking a vowel, consonant or
 	 * attempting to solve the puzzle
 	 */
-	public static String choices(Scanner number) {
+	public static void choices(Scanner number) {
 		try {
 			System.out.println("what would you like to do " + listOfPlayers.get(playerturn).getName()
 					+ "? Press 1 to buy a vowel, " + "press 2 to get a consonant " + "press 3 to solve the puzzle ");
-			int caseNumber = number.nextInt();
+
+			int caseNumber = Integer.parseInt(number.nextLine());
 
 			switch (caseNumber) {
 			case 1: {
-				return listOfPlayers.get(playerturn).chooseVowel(key);
+				boolean durp = listOfPlayers.get(playerturn).chooseVowel(key);
+				if (durp == false) {
+					playerturn++;
+				}
+				break;
 
 			}
 			case 2: {
-				return listOfPlayers.get(playerturn).chooseConsonant(key);
+				boolean durp = listOfPlayers.get(playerturn).chooseConsonant(key);
+
+				System.out.println(durp + " this is after turn method");
+
+				if (durp == false) {
+					playerturn++;
+				}
+				break;
 
 			}
 			case 3: {
-				return listOfPlayers.get(playerturn).solve(key);
+				String durp = listOfPlayers.get(playerturn).solve(key);
+				// boardchanger(durp);
+				// System.out.println(durp);
+				isSolved(billboard, word);
+
+				break;
 
 			}
-			}
 
+			}
 		} catch (Exception e) {
-			number.next();
+			number.nextLine();
 			// TODO: handle exception
 		}
-		return null;
 
 	}
 
 	public static void boardchanger(String x) {
 
 		for (int i = 0; i < billboard.size(); i++) {
+
 			if (billboard.get(i).equals(x)) {
 				word.replace(i, i + 1, x);
 			}
 
 		}
-		System.out.println(billboard.toString());
-		System.out.println(word);
+
+		System.out.println(billboard.toString() + "this is from the boardchanger method");
+		System.out.println(word + "same as above");
 
 	}/*
 		 * should the turn method make sure that the player input actually did something
@@ -130,17 +169,31 @@ public class wheelOfFortune extends Setup {
 	 * to the next player
 	 */
 
-	public static void turn() {
+	/*
+	 * turn method is still giving problems. the returned value isn't being used in
+	 * the method. i can't figure out how this is messed up
+	 */
+
+	public static void turn(String s) {
+
+		int letterMultiplier = 0;
 		for (int i = 0; i < billboard.size(); i++) {
-			if (word.toString().contains(billboard.get(i))) {
+
+			if (s.toUpperCase().equals(billboard.get(i))) {
+
+				letterMultiplier++;
+				billboard.set(i, " ");
 				System.out.println("correct");
 
-			} else {
+			}
+			if (letterMultiplier == 0) {
 				playerturn++;
 				break;
 			}
+			System.out.println(playerturn + " this is playerturn");
 		}
-
+		System.out.println(letterMultiplier + " this is lettermultiplier");
+		System.out.println(billboard.toString());
 		/*
 		 * this might run after the boardchanger method and anything else to make it so
 		 * it picks another player by adjusting the playerturn number.
@@ -152,6 +205,10 @@ public class wheelOfFortune extends Setup {
 		System.out.println(playerturn + " this is the playerturn counter");
 	}
 
+	/*
+	 * method to make sure that the puzzle is solved. the puzle might be completed
+	 * if someone guesses the whole word out so have to try to fix that.
+	 */
 	public static boolean isSolved(ArrayList<String> correctString, StringBuilder s2) {
 		boolean correct = false;
 		if (correctString.toString().equals(s2.toString())) {

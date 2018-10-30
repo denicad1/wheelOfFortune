@@ -6,7 +6,11 @@ public class Setup {
 	static ArrayList<String> billboard;
 	static ArrayList<String> temp;
 	static StringBuilder word;
-
+	static int counter = 1;
+	String[] vowels = { "A", "E", "I", "O", "U" };
+	String[] consonants = { "B", "C", "D", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V", "W",
+			"X", "Y", "Z" };
+	static int playerturn = 0;
 	public static ArrayList<player> listOfPlayers = new ArrayList<>();
 
 	public static String topic() {
@@ -19,35 +23,6 @@ public class Setup {
 		String topic = categories[decider][decider1];
 		return topic.toUpperCase();
 		// the topic and category are set up
-	}
-
-	public static ArrayList<Integer> wheel() {
-
-		wheel.add(-1);// lose a turn
-		wheel.add(800);
-		wheel.add(350);
-		wheel.add(450);
-		wheel.add(700);
-		wheel.add(300);
-		wheel.add(600);
-		wheel.add(5000);
-		wheel.add(300);
-		wheel.add(600);
-		wheel.add(300);
-		wheel.add(500);
-		wheel.add(800);
-		wheel.add(550);
-		wheel.add(400);
-		wheel.add(300);
-		wheel.add(900);
-		wheel.add(500);
-		wheel.add(2);// wildcard
-		wheel.add(900);
-		wheel.add(0);// bankrupt
-		wheel.add(600);
-		wheel.add(400);
-		wheel.add(300);
-		return wheel;
 	}
 
 	public static void board(String topic) {
