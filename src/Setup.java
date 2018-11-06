@@ -1,27 +1,45 @@
 import java.util.*;
+
 import java.io.*;
 
 public class Setup {
+	/**
+	 * @param prompt
+	 */
+
+	/**
+	 * @param prompt
+	 */
+
 	final static ArrayList<Integer> wheel = new ArrayList<>();
 	static ArrayList<String> billboard;
 	static ArrayList<String> temp;
 	static StringBuilder word;
+	static String topic;
 	static int counter = 1;
-	String[] vowels = { "A", "E", "I", "O", "U" };
-	String[] consonants = { "B", "C", "D", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V", "W",
-			"X", "Y", "Z" };
+	static String[] vowelsPerm = { "A", "E", "I", "O", "U" };
+	static String[] vowels = { "A", "E", "I", "O", "U" };
+	static String[] consonants = { "B", "C", "D", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V",
+			"W", "X", "Y", "Z" };
+	static String[] consonantsPerm = { "B", "C", "D", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T",
+			"V", "W", "X", "Y", "Z" };
 	static int playerturn = 0;
 	public static ArrayList<player> listOfPlayers = new ArrayList<>();
+	static boolean finished = false;
 
 	public static String topic() {
-		int decider = new Random().nextInt(3);
-		int decider1 = new Random().nextInt(3);
-		String[] person = { "Marilyn Monroe", "Abraham Lincoln", "Martin Luther King" };
-		String[] place = { "D ubai", "Har  lem", "Tok yo" };
-		String[] thing = { "ir on", "sh oe", "eiffel tower" };
-		String[][] categories = { person, place, thing };
-		String topic = categories[decider][decider1];
-		return topic.toUpperCase();
+		System.out.println("enter a topic:");
+		// won't catch if the topic is empty, only if the phrase is empty
+		topic = wheelOfFortune.key.nextLine().toUpperCase();
+		System.out.println("enter a phrase:");
+
+		String phrase = wheelOfFortune.key.nextLine().toUpperCase();
+
+		if (phrase.length() > 30 || phrase.length() <= 1) {
+			System.out.println("re-enter a topic and phrase");
+			topic();
+		}
+		return phrase;
 		// the topic and category are set up
 	}
 
@@ -39,6 +57,12 @@ public class Setup {
 			if (billboard.get(i).equals(" ")) {
 				temp.add(" ");
 
+			} else if (billboard.get(i).equals("'")) {
+				temp.add("'");
+			} else if (billboard.get(i).equals("&")) {
+				temp.add("&");
+			} else if (billboard.get(i).equals("!")) {
+				temp.add("!");
 			} else {
 				temp.add("*");
 			}
@@ -48,8 +72,8 @@ public class Setup {
 			String letter = temp.get(i);
 			word.append(letter);
 		}
-		System.out.println(billboard.toString() + "this is being printed from the setup class");
-		System.out.println(word + "same thing as above");
+
+		System.out.println(word);
 
 	}
 

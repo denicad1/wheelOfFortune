@@ -10,21 +10,22 @@ import java.util.Scanner;
  *
  */
 public class wheelOfFortune extends Setup {
-	final static Scanner key = new Scanner(System.in);// don't forget to close scanner
+	final static Scanner key = new Scanner(System.in);
 
 	/*
 	 * this counter is only for saying which player is getting named
 	 */
-
+	/** I couldn't get it to cover the input as people enter it */
 	static int rounds = 3;
-	/* array of players */
 
 	public static void main(String[] args) {
+
 		wheel.add(-1);// lose a turn
 		wheel.add(800);
 		wheel.add(350);
 		wheel.add(450);
 		wheel.add(700);
+
 		wheel.add(300);
 		wheel.add(600);
 		wheel.add(5000);
@@ -38,7 +39,7 @@ public class wheelOfFortune extends Setup {
 		wheel.add(300);
 		wheel.add(900);
 		wheel.add(500);
-		wheel.add(2);// wildcard
+		wheel.add(300);// wildcard. this should be wildcard but i was gonna get that later
 		wheel.add(900);
 		wheel.add(0);// bankrupt
 		wheel.add(600);
@@ -46,35 +47,40 @@ public class wheelOfFortune extends Setup {
 		wheel.add(300);
 		System.out.println("Welcome to Wheel of Fortune");
 		/* these are the players */
-		player player1 = new player(100, 0, Name());
-		player player2 = new player(100, 0, Name());
-		player player3 = new player(100, 0, Name());
+		player player1 = new player(0, 0, Name());
+		player player2 = new player(0, 0, Name());
+		player player3 = new player(0, 0, Name());
 		/* adding the player objects to the array listOfPlayers */
 		listOfPlayers.add(player1);
 		listOfPlayers.add(player2);
 		listOfPlayers.add(player3);
 
-		board(topic());
-
-		/*
-		 * figure out how to make it run correctly. the solve method isnt working
-		 * properly. I believe that the chooseVowel and ChooseConsonant work properly.
-		 * just gotta put those parts together first
-		 */
-		/* still have to add a multiplier for when multiple letters are correct */
-		/* still have to add a banking system */
-		/*
-		 * make sure that when choosing a vowel, it deducts a 100 points and that if
-		 * they dont have enough that it will tell them
-		 */
 		/* figure out a free spin system */
-		for (int i = 0; i < 10; i++) {
 
+		for (int i = 0; i < 4; i++) {
+			board(topic());
 			do {
+				if (playerturn == 3) {
+					playerturn = 0;
+				}
 				choices(key);
 
-			} while (isSolved(billboard, word) == false);
+			} while (finished != true);
+			listOfPlayers.get(playerturn).isSolved();
+			for (int j = 0; j < listOfPlayers.size(); j++) {
+				System.out.println("Here is " + listOfPlayers.get(j).getName() + " grand total: "
+						+ listOfPlayers.get(j).grandTotalBank);
+			}
 		}
+		player winner = listOfPlayers.get(0);
+		for (int i = 0; i < listOfPlayers.size(); i++) {
+
+			if (winner.grandTotalBank < listOfPlayers.get(i).grandTotalBank) {
+				winner = listOfPlayers.get(i);
+			}
+
+		}
+		System.out.println(winner.getName().toString() + " is the winner with " + winner.grandTotalBank + " dollars!");
 
 		key.close();
 
@@ -84,9 +90,10 @@ public class wheelOfFortune extends Setup {
 	 * the name method allows you to name each player
 	 */
 	public static String Name() {
-
+		// you can enter a blank name
 		System.out.println("input player" + counter + " name");
 		String name = key.nextLine();
+
 		counter++;
 		return name;
 
@@ -105,6 +112,7 @@ public class wheelOfFortune extends Setup {
 
 			switch (caseNumber) {
 			case 1: {
+
 				boolean durp = listOfPlayers.get(playerturn).chooseVowel(key);
 				if (durp == false) {
 					playerturn++;
@@ -115,8 +123,6 @@ public class wheelOfFortune extends Setup {
 			case 2: {
 				boolean durp = listOfPlayers.get(playerturn).chooseConsonant(key);
 
-				System.out.println(durp + " this is after turn method");
-
 				if (durp == false) {
 					playerturn++;
 				}
@@ -124,97 +130,16 @@ public class wheelOfFortune extends Setup {
 
 			}
 			case 3: {
-				String durp = listOfPlayers.get(playerturn).solve(key);
-				// boardchanger(durp);
-				// System.out.println(durp);
-				isSolved(billboard, word);
+				finished = listOfPlayers.get(playerturn).solve(key);
 
 				break;
 
 			}
 
 			}
-		} catch (Exception e) {
-			number.nextLine();
+		} catch (NumberFormatException e) {
+			System.out.println("not a correct input");
 			// TODO: handle exception
 		}
-
 	}
-
-	public static void boardchanger(String x) {
-
-		for (int i = 0; i < billboard.size(); i++) {
-
-			if (billboard.get(i).equals(x)) {
-				word.replace(i, i + 1, x);
-			}
-
-		}
-
-		System.out.println(billboard.toString() + "this is from the boardchanger method");
-		System.out.println(word + "same as above");
-
-	}/*
-		 * should the turn method make sure that the player input actually did something
-		 * to progress the game?
-		 */
-	/*
-	 * keep working on turn. if keeps jumping 1. it is adding a bunch of numbers no
-	 * matter if i get it right or not
-	 */
-	/*
-	 * it is counting sequentially. it can't tell if the current player got it right
-	 * or not. need to make it check if something in the word has changed and
-	 * compare it to an old version of itself so it knows whether or not to switch
-	 * to the next player
-	 */
-
-	/*
-	 * turn method is still giving problems. the returned value isn't being used in
-	 * the method. i can't figure out how this is messed up
-	 */
-
-	public static void turn(String s) {
-
-		int letterMultiplier = 0;
-		for (int i = 0; i < billboard.size(); i++) {
-
-			if (s.toUpperCase().equals(billboard.get(i))) {
-
-				letterMultiplier++;
-				billboard.set(i, " ");
-				System.out.println("correct");
-
-			}
-			if (letterMultiplier == 0) {
-				playerturn++;
-				break;
-			}
-			System.out.println(playerturn + " this is playerturn");
-		}
-		System.out.println(letterMultiplier + " this is lettermultiplier");
-		System.out.println(billboard.toString());
-		/*
-		 * this might run after the boardchanger method and anything else to make it so
-		 * it picks another player by adjusting the playerturn number.
-		 */
-
-		if (playerturn > 2) {
-			playerturn = 0;
-		}
-		System.out.println(playerturn + " this is the playerturn counter");
-	}
-
-	/*
-	 * method to make sure that the puzzle is solved. the puzle might be completed
-	 * if someone guesses the whole word out so have to try to fix that.
-	 */
-	public static boolean isSolved(ArrayList<String> correctString, StringBuilder s2) {
-		boolean correct = false;
-		if (correctString.toString().equals(s2.toString())) {
-			correct = true;
-		}
-		return correct;
-	}
-
 }

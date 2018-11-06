@@ -3,6 +3,7 @@ import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.regex.Matcher;
 
 /**
  * 
@@ -43,6 +44,10 @@ public class player extends Setup {
 	 *            the bank to set
 	 */
 	public void setBank(int bank) {
+		this.bank += bank;
+	}
+
+	public void resetBank(int bank) {
 		this.bank = bank;
 	}
 
@@ -58,7 +63,7 @@ public class player extends Setup {
 	 *            the grandTotalBank to set
 	 */
 	public void setGrandTotalBank(int grandTotalBank) {
-		this.grandTotalBank = grandTotalBank;
+		this.grandTotalBank += grandTotalBank;
 	}
 
 	/**
@@ -93,35 +98,38 @@ public class player extends Setup {
 	 * pertains to the current round
 	 **/
 
-	public int increaseGrandBank(player x) {
-		x.grandTotalBank += x.bank;
-		return x.grandTotalBank;
-	}// method to add the bank of the current round to the grand bank of the winner
-
 	/* this method is to verify that the player chooses a vowel */
+
 	public boolean chooseVowel(Scanner vowel) {
 		String correct = "nope";
 		boolean go = false;
 		try {
-			int letterMultiplier = 0;
+
 			/*
 			 * this boolean is so the else statement doesn't run everytime for the size of
 			 * the vowels array. the vowels array is so the input can be compared to
 			 * something
 			 */
+			if (listOfPlayers.get(playerturn).getBank() < 100) {
+				System.out.println("not enough money");
+				return go;
+			} else {
+				listOfPlayers.get(playerturn).bank -= 100;
+			}
 
-			System.out.println(spin());
+			System.out.print("Vowels: ");
+			for (int i = 0; i < vowels.length; i++) {
+				System.out.print(vowels[i] + " ");
+			}
+			System.out.println();
 			System.out.println("choose a vowel");
-
 			/*
 			 * vowelChoose is the player input for choosing a vowel. it will be changed to
 			 * upper case so that it will be comparable to the vowels array. if the player's
 			 * choice matches anything in the array then it will change the boolean to true
 			 * which will stop the game from saying that a vowel wasn't chosen
 			 */
-
 			String vowelChoose = vowel.nextLine();
-
 			char temp = vowelChoose.toUpperCase().charAt(0);
 			String vowelCharAt = Character.toString(temp);
 
@@ -134,12 +142,9 @@ public class player extends Setup {
 						if (billboard.get(y).equals(correct)) {
 							word.replace(y, y + 1, correct);
 						}
-
 					}
 					vowels[i] = " ";
-
 				}
-
 			}
 
 			/*
@@ -148,35 +153,26 @@ public class player extends Setup {
 			 */
 			if (!go) {
 				System.out.println("not a vowel");
-				// playerturn++;
 
 			}
 			for (int i = 0; i < word.length(); i++) {
 				if (correct.equals(billboard.get(i))) {
 					go = true;
-					letterMultiplier++;
 					billboard.set(i, " ");
 				}
-
 			}
 			for (int i = 0; i < word.length(); i++) {
-
 				if (billboard.get(i).equals(correct)) {
 					word.replace(i, i + 1, correct);
 				}
-
 			}
-
-			System.out.println(billboard.toString());
+			System.out.println(topic);
 			System.out.println(word.toString());
 		} catch (NullPointerException e) {
-
 			// TODO: handle exception
 			System.out.println("not a vowel. try again");
 		}
-
 		return go;
-
 	}
 
 	/* this method is meant to make sure that the user chooses a consonant */
@@ -185,10 +181,22 @@ public class player extends Setup {
 		String correct = "nope";
 		try {
 			int letterMultiplier = 0;
-
-			System.out.println(spin());
+			int spinValue = spin();
+			System.out.println(spinValue);
+			if (spinValue == -1) {
+				System.out.println("lose turn");
+				return go;
+			} else if (spinValue == 0) {
+				listOfPlayers.get(playerturn).setBank(0);
+				System.out.println("Bankrupt");
+				return go;
+			}
+			System.out.print("Consonants: ");
+			for (int i = 0; i < consonants.length; i++) {
+				System.out.print(consonants[i] + " ");
+			}
+			System.out.println();
 			System.out.println("choose a consonant");
-
 			String consonantChoose = consonant.nextLine();
 			char temp = consonantChoose.toUpperCase().charAt(0);
 			String consonantCharAt = Character.toString(temp);
@@ -206,19 +214,12 @@ public class player extends Setup {
 				}
 
 			}
-			System.out.println(correct + "this is after replacing stuff in the array");
-			// System.out.println(go + " this is before the if");
-			if (!go) {
-				System.out.println("not a consonant");
-				// playerturn++;
-				// System.out.println(go + " this is after");
-			}
 			for (int i = 0; i < word.length(); i++) {
 				if (correct.equals(billboard.get(i))) {
 					go = true;
 					letterMultiplier++;
 					billboard.set(i, " ");
-					System.out.println("correct");
+
 				}
 
 			}
@@ -228,21 +229,25 @@ public class player extends Setup {
 					word.replace(i, i + 1, correct);
 				}
 			}
+			if (go == true) {
+				int points = letterMultiplier * spinValue;
 
-			System.out.println(billboard.toString() + "this is from the boardchanger method");
-			System.out.println(word + "same as above");
+				listOfPlayers.get(playerturn).setBank(points);
+
+			}
+			System.out.println("Topic is " + topic);
+			System.out.println("Our word is " + word);
+			System.out.println(
+					listOfPlayers.get(playerturn).getName() + " has " + listOfPlayers.get(playerturn).getBank());
 		} catch (NullPointerException e) {
 			// TODO: handle exception
 			System.out.println("not a consonant. try again");
+		} catch (StringIndexOutOfBoundsException e) {
+			System.out.println("not an answer");
+			consonant.nextLine();
 		}
 
 		return go;
-
-		/*
-		 * fix choose consonant. also fix chooseVowel. choose vowel must return a
-		 * string. chooseConsonant must return string. make it razzle dazzle these
-		 * fucks. you got it
-		 */
 
 	}
 
@@ -251,47 +256,58 @@ public class player extends Setup {
 	 * and puts it into an array. it compares the array to the array that the phrase
 	 * is chosen from
 	 */
-	public String solve(Scanner phrase) {
-		String finished = "nope";
+	public boolean solve(Scanner phrase) {
+
 		ArrayList<String> hello = new ArrayList<>();
 
 		try {
 
-			System.out.println(spin());
-			System.out.println("spell the sentence ");
+			System.out.println("Solve the puzzle ");
 			String finish = phrase.nextLine().toUpperCase();
 			for (int i = 0; i < finish.length(); i++) {
 				char t = finish.charAt(i);
 				String insert = Character.toString(t);
 				hello.add(insert);
-				if (hello.get(i).equals(billboard.get(i))) {
-
-					finished = hello.toString();
-
-				} // if
 			}
-			for (int i = 0; i < billboard.size(); i++) {
+			for (int j = 0; j < word.length(); j++) {
+				if (hello.get(j).equals(billboard.get(j))) {
+					word.replace(j, j + 1, hello.get(j));
 
-				if (billboard.get(i).equals(finish)) {
-					word.replace(i, i + 1, finish);
-				} /*
-					 * start working on the third method. need to make banking,user input for phrase
-					 * and topic,and try to fix the switch problem where it only goes about 4 times
-					 * and stops then pretty it all up. try to have it print out all the letters
-					 * that have already been chosen. the arrays are there, just need to find a way
-					 * to restore them each round.
-					 */
-
+				}
 			}
+			ArrayList<Character> thumb = new ArrayList<>();
+			for (int i = 0; i < word.length(); i++) {
+				thumb.add(word.charAt(i));
+			}
+
+			if (thumb.toString().toUpperCase().equals(hello.toString().toUpperCase())) {
+				finished = true;
+			}
+
 			System.out.println(word.toString());
 
 		} catch (Exception e) {
 			// TODO: handle exception
 			// phrase.next();
 		} // catch
-		System.out.println(finished);
 
 		return finished;
+	}
+
+	public void isSolved() {
+
+		listOfPlayers.get(playerturn).setGrandTotalBank(listOfPlayers.get(playerturn).bank);
+		for (int i = 0; i < listOfPlayers.size(); i++) {
+			listOfPlayers.get(i).resetBank(0);
+		}
+		for (int i = 0; i < vowelsPerm.length; i++) {
+			vowels[i] = vowelsPerm[i];
+		}
+		for (int i = 0; i < consonants.length; i++) {
+			consonants[i] = consonantsPerm[i];
+		}
+
+		finished = false;
 	}
 
 }
